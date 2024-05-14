@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Mapbox Example</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js"></script>
+    <link
+            href="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css"
+            rel="stylesheet"
+    />
+    <style>
+        body {
+          margin: 0;
+          padding: 0;
+          font-family: Arial, sans-serif;
+        }
+
+        #map-container {
+          width: 70%;
+          height: 70vh;
+          margin: auto;
+          position: relative;
+          border-radius: 10px;
+          overflow: hidden;
+        }
+
+        #map {
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          width: 100%;
+        }
+
+        .input-container {
+          position: absolute;
+          top: 10px;
+          left: 10px;
+          z-index: 1;
+          background: rgba(255, 255, 255, 0.8);
+          padding: 10px;
+          border-radius: 5px;
+          box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        input,
+        textarea {
+          width: calc(100% - 20px);
+          padding: 5px;
+          margin-bottom: 5px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+        }
+
+        button {
+          width: calc(100% - 20px);
+          padding: 5px;
+          background: #007bff;
+          color: white;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+        }
+    </style>
+
+    <!-- adding css file for navbar -->
+    <link rel="stylesheet" th:href="@{/css/navstyle.css}" />
+</head>
+
+<body>
+<!-- replaces host tag with the fragment tag -->
+<div th:replace="~{myfragments :: navbarfragment}">
+    <h1>host tag</h1>
+</div>
+
+<div id="map-container">
+    <div id="map"></div>
+    <div class="input-container">
+        <form id="route-form">
+            <label for="start">Start Location:</label><br />
+            <input
+                    type="text"
+                    id="start"
+                    name="start"
+                    th:value="${start}"
+            /><br />
+            <label for="end">End Location:</label><br />
+            <input type="text" id="end" name="end" th:value="${end}" /><br />
+            <label for="stops">Stops (seperate by space):</label><br />
+            <input
+                    id="stops"
+                    name="stops"
+                    rows="3"
+                    th:value="${stops}"
+            ></input
+            ><br /><br />
+            <button type="submit">Show Route</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    mapboxgl.accessToken =
+      "pk.eyJ1IjoiYW1hbmNoYXVyYXNpYTAxMiIsImEiOiJjbHZ5dXZ5eXMyandjMmptc3c0ZnZ1MWE0In0.lDoVz84Z7lfRbpA0qh1VCA";
+
+    var map = new mapboxgl.Map({
+      container: "map",
+      style: "mapbox://styles/mapbox/streets-v11",
+      center: [78.0081, 27.1767], // center on Agra, India
+      zoom: 12, // adjust zoom level as needed
+    });
+
+    var markers = [];
+
+    // Handle form submission
+    document
+      .getElementById("route-form")
+      .addEventListener("submit", function (e) {
+        e.preventDefault();
+        console.log("Form submitted");
+        var start = document.getElementById("start").value;
+        var end = document.getElementById("end").value;
+        var stops = document
+          .getElementById("stops")
+          .value.split(" ")
+          .filter(Boolean);
+        console.log("Start:", start);
+        console.log("End:", end);
+        console.log("Stops:", stops);
+        getRoute(start, end, stops);
+      });
+
+    function getRoute(start, end, stops) {
+      var locations = [start, ...stops, end]; // Include start and end in the locations array
+
+      // Use Geocoding API to convert location names to coordinates
+      var geocodingUrl = "https://api.mapbox.com/geocoding/v5/mapbox.places/";
+      var accessToken = "?access_token=" + mapboxgl.accessToken;
+
+      var coordinates = [];
+
+      // Get coordinates for all locations
+      Promise.all(
+        locations.map((location) =>
+          fetch(
+            geocodingUrl +
+              encodeURIComponent(location) +
+              ".json" +
+              accessToken
+          )
+            .then((response) => response.json())
+            .then((data) => {
+              coordinates.push(data.features[0].center);
+            })
+        )
+      ).then(() => {
+        drawRoute(coordinates);
+      });
+    }
+
+    function drawRoute(coordinates) {
+      // Draw a line between all coordinates
+      var geojson = {
+        type: "FeatureCollection",
+        features: [
+          {
+            type: "Feature",
+            properties: {},
+            geometry: {
+              type: "LineString",
+              coordinates: coordinates,
+            },
+          },
+        ],
+      };
+
+      // Add the route to the map
+      map.addSource("route", {
+        type: "geojson",
+        data: geojson,
+      });
+
+      map.addLayer({
+        id: "route",
+        type: "line",
+        source: "route",
+        layout: {
+          "line-join": "round",
+          "line-cap": "round",
+        },
+        paint: {
+          "line-color": "#007bff",
+          "line-width": 5,
+        },
+      });
+
+      // Add markers for start and end locations
+      var startMarker = new mapboxgl.Marker({ color: "blue" })
+        .setLngLat(coordinates[0])
+        .addTo(map);
+      markers.push(startMarker);
+
+      var endMarker = new mapboxgl.Marker({ color: "blue" })
+        .setLngLat(coordinates[coordinates.length - 1])
+        .addTo(map);
+      markers.push(endMarker);
+
+      // Add red markers for stops
+      coordinates.slice(1, -1).forEach((coordinate) => {
+        var stopMarker = new mapboxgl.Marker({ color: "red" })
+          .setLngLat(coordinate)
+          .addTo(map);
+        markers.push(stopMarker);
+      });
+
+      // Fit the map to the route
+      var bounds = new mapboxgl.LngLatBounds();
+      coordinates.forEach(function (coordinate) {
+        bounds.extend(coordinate);
+      });
+      map.fitBounds(bounds, { padding: 50 });
+    }
+</script>
+</body>
+</html>

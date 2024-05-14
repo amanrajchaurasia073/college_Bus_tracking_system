@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html
+        lang="en"
+        xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+        xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>College Bus Tracking System</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
+    <style>
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background-size: cover;
+        }
+
+        header {
+            background-color: #03022c;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+        }
+
+        header h1 {
+               margin: 0;
+                font-size: 59px;
+                color: #d1b2b2;
+        }
+
+        header p {
+            font-size: 18px;
+            margin-bottom: 0;
+            color: rgb(147 45 173);
+        }
+
+        nav {
+            background-color: #03022c;
+            padding: 10px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        nav ul li {
+            display: inline;
+            margin-right: 20px;
+            position: relative;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #fff;
+            font-weight: bold;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: #ffd700;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #08093c;
+            min-width: 260px;
+            z-index: 1;
+            top: 100%;
+            left: 0;
+        }
+
+        .dropdown-content a {
+            color: #fff;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.3s;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #444;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .card {
+            background-color: black;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+<!--            box-shadow: 0 4px 20px #0b4380;-->
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+<!--            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);-->
+        }
+
+        .row .col-md-4:hover .card {
+            transform: translateX(20px);
+        }
+         .center-image {
+        text-align: center;
+        overflow: hidden; /* Hide overflow */
+    }
+
+    .center-image img {
+        max-width: 100%;
+        height: auto;
+    }
+        footer {
+            background-color: black;
+            color: #fff;
+            text-align: center;
+            padding: 40px 0; /* Increased padding */
+<!--            position: fixed;-->
+            bottom: 0;
+            width: 100%;
+            font-size: 14px;
+        }
+
+        #in {
+            font-size: 20px;
+            color: red;
+            margin-left: 427px;
+            margin-top: -81px;
+            position: absolute;
+            border-radius: 30px;
+            box-shadow: 2px 4px rgb(65, 197, 85);
+        }
+
+        /* Center image */
+        .center-image {
+            text-align: center;
+            overflow: hidden; /* Remove scroll */
+        }
+
+        .center-image img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>College Bus Tracking System</h1>
+    <p>mitigating the impact of unexpected delays!</p>
+    <!-- <input th:value="${role}" readonly="readonly" id="in"> -->
+    <button th:text="${role}" id="in"></button>
+    <nav>
+        <ul>
+            <li><a th:href="@{/home}">Home</a></li>
+            <li><a th:href="@{/about}">About</a></li>
+            <li class="dropdown">
+                <a href="#" sec:authorize="isAuthenticated()">Activities</a>
+                <div class="dropdown-content">
+                    <a th:href="@{/viewUsers}" sec:authorize="hasRole('ROLE_ADMIN')">View User's And Activated</a>
+                    <a th:href="@{/createUser}" sec:authorize="hasRole('ROLE_ADMIN')">Create User's</a>
+                    <a th:href="@{/mapInput}" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_DRIVER')">Add Bus
+                        Route</a>
+                    <a th:href="@{/showMap}" sec:authorize="isAuthenticated()">View Bus Route</a>
+                    <a th:href="@{/profile}">View Profile</a>
+                </div>
+            </li>
+            <li><a th:href="@{/signup}">Sign up</a></li>
+            <li><a th:href="@{/contact}">contact us</a></li>
+            <li><a sec:authorize="!isAuthenticated()" th:href="@{/newLogin}">Login</a></li>
+            <li><a sec:authorize="isAuthenticated()" th:href="@{/logout}">Logout</a></li>
+        </ul>
+    </nav>
+</header>
+<div class="center-image">
+    <img src="/image/backgroundImg.jpg" alt="loading image...." style="width: 100%; height: 500px;">
+</div>
+<!-- Footer -->
+<footer>
+    <div class="container d-flex justify-content-center">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <h2>Aim</h2>
+                    <p>
+                        To enhance the overall transportation experience for college
+                        students and to provide a reliable solution for students to manage
+                        their commute efficiently Our aim is to make labs more accessible
+                        and engaging for everyone.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <h2>Objective</h2>
+                    <p>
+                        To ensure timely and accurate updates to facilitate effective
+                        journey planning and to reduce waiting durations and minimize the
+                        likelihood of missed buses.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <h2>Contact Us</h2>
+                    <p>
+                        If you have any questions or feedback, feel free to contact us at:
+                        <a href="mailto:amanrajchaurasia073@gmail.com"
+                        ><span style="color: blue"
+                        >amanrajchaurasai073@gmail.com</span
+                        ></a
+                        >
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a href="#">Privacy Policy</a>
+    <a href="#">Terms of Service</a>
+    <a href="#">FAQs</a>
+    <p>&copy; 2024 College Bus Tracking System . All rights reserved.</p>
+</footer>
+</body>
+</html>

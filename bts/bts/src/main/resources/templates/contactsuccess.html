@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>contact success</title>
+    <!-- adding css file for navbar -->
+    <link rel="stylesheet" th:href="@{/css/navstyle.css}" />
+    <!-- adding Bootstrap CSS -->
+    <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+</head>
+<body>
+<!-- replaces host tag with the fragment tag -->
+<div th:replace="~{myfragments :: navbarfragment}">
+    <h1>host tag</h1>
+</div>
+
+<!-- Wrap content inside a horizontal card -->
+<div class="container mt-4">
+    <div class="card border-primary">
+        <div class="card-header bg-success text-white">
+            <h5 class="card-title">Success</h5>
+        </div>
+        <div class="card-body">
+            <h1>Hello Mr: <span th:text="${contactDto.name}"></span></h1>
+            <h1>Your query was sent successfully</h1>
+        </div>
+        <div class="card-footer">
+            <a th:href="@{/}" class="btn btn-primary">Go to Home Page</a>
+        </div>
+    </div>
+</div>
+
+<!-- adding Bootstrap JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

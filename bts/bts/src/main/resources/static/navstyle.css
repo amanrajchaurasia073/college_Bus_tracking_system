@@ -1,0 +1,129 @@
+/* Styles for College Bus Tracking System */
+
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+    color: #333;
+    background-size: cover;
+}
+
+header, nav, footer {
+    background-color: #03022c;
+    color: #fff;
+}
+
+header {
+    padding: 20px 0;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 36px;
+    color: yellow;
+}
+
+header p {
+    font-size: 18px;
+    margin-bottom: 0;
+    color: rgb(136, 211, 109);
+}
+
+nav {
+    padding: 10px 0;
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 20px;
+    position: relative;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #fff;
+    font-weight: bold;
+    font-size: 16px;
+    transition: color 0.3s;
+}
+
+nav ul li a:hover {
+    color: #ffd700;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #08093c;
+    min-width: 260px;
+    z-index: 1;
+    top: 100%;
+    left: 0;
+}
+
+.dropdown-content a {
+    color: #fff;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    transition: background-color 0.3s;
+}
+
+.dropdown-content a:hover {
+    background-color: #444;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.card {
+    background-color: black;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 20px #0b4380;
+    transition: transform 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.row .col-md-4:hover .card {
+    transform: translateX(20px);
+}
+
+footer {
+    text-align: center;
+    padding: 40px 0;
+    font-size: 14px;
+}
+
+.footer-links a {
+    margin-right: 10px;
+}
+
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 28px;
+    }
+    header p {
+        font-size: 14px;
+    }
+    nav ul li {
+        margin-right: 10px;
+    }
+    .footer-links a {
+        margin-right: 5px;
+    }

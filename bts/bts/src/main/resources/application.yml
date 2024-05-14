@@ -1,0 +1,27 @@
+spring:
+  output:
+    ansi:
+      enabled: always
+  datasource:
+    url: jdbc:postgresql://localhost:5432/cbts?user=postgres&password=abc@123
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+    properties:
+      hibernate:
+        format_sql: true
+  # configuration for mail sender api
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: amanrajchaurasia073@gmail.com
+    password: aman123
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
